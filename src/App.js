@@ -1,20 +1,24 @@
-//import EventPractice from "./EventPractice";
-//import ValidationSample from "./ValidationSample";
-import React, { Component } from "react";
-import ScrollBox from "./ScrollBox";
-//import { render } from "@testing-library/react";
+import IterationSample from "./IterationSample";
 
-class App extends Component {
-  render() {
-    return (
-      <div>
-        <ScrollBox ref={(ref) => (this.scrollBox = ref)} />
-        <button onClick={() => this.scrollBox.scrollToBottom()}>
-          맨 밑으로
-        </button>
-      </div>
-    );
-  }
+function App() {
+  return <IterationSample />;
 }
 
 export default App;
+
+// import React, { Component } from "react";
+// import ScrollBox from "./ScrollBox";
+//
+// class App extends Component {
+//   render() {
+//     return (
+//         <div>
+//           <ScrollBox ref={(ref) => (this.scrollBox = ref)} />
+//           <button onClick={() => this.scrollBox.scrollToBottom()}>
+//             맨 밑으로
+//           </button>
+//         </div>
+//     );
+//   }
+// }
+//
