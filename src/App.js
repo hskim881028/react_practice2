@@ -1,10 +1,7 @@
-import logo from './logo.svg';
+import EventPractice from "./EventPractice";
 
 function App() {
-  return (
-    <div className="App">
-    </div>
-  );
+  return <EventPractice />;
 }
 
 export default App;
