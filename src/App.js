@@ -1,50 +1,87 @@
-import React, { useState, Component } from "react";
-import Info from "./Info";
-import LifeCycleSample from "./LifeCycleSample";
-import ErrorBoundary from "./ErrorBoundary";
-
-// function getRandomColor() {
-//   return "#" + Math.floor(Math.random() * 16777215).toString(16);
-// }
-//
-// class App extends Component {
-//   state = {
-//     color: "#000000",
-//   };
-//
-//   handleClick = () => {
-//     this.setState({ color: getRandomColor() });
-//   };
-//
-//   render() {
-//     return (
-//       <div>
-//         <button onClick={this.handleClick}>랜덤색상</button>
-//         <ErrorBoundary>
-//           <div>야홀홀로로로</div>
-//           <LifeCycleSample color={this.state.color} />
-//         </ErrorBoundary>
-//       </div>
-//     );
-//   }
-// }
+import React, { useRef, useCallback, useState } from "react";
+import produce from "immer";
 
 const App = () => {
-  const [visible, setVisible] = useState(false);
+  const nextId = useRef(1);
+  const [form, setForm] = useState({ name: "", username: "" });
+  const [data, setData] = useState({
+    array: [],
+    uselessValue: null,
+  });
+
+  const onChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setForm(
+      produce((draft) => {
+        draft[name] = value;
+      })
+    );
+  }, []);
+
+  const onSumit = useCallback(
+    (e) => {
+      e.preventDefault();
+      const info = {
+        id: nextId.current,
+        name: form.name,
+        username: form.username,
+      };
+
+      setData(
+        produce((draft) => {
+          draft.array.push(info);
+        })
+      );
+
+      setForm({
+        ...form,
+        "": "",
+      });
+      nextId.current += 1;
+    },
+    [form.name, form.username]
+  );
+
+  const onRemove = useCallback((e) => {
+    setData(
+      produce((draft) => {
+        draft.array.splice(
+          draft.array.findIndex((info) => info.id === e),
+          1
+        );
+      })
+    );
+  }, []);
 
   return (
     <div>
-      <button
-        onClick={() => {
-          setVisible(!visible);
-        }}
-      >
-        {" "}
-        {visible ? "숨기기" : "보이기"}
-      </button>
-      <hr />
-      {visible && <Info />}
+      <form onSubmit={onSumit}>
+        <input
+          name="username"
+          placeholder="아이디"
+          value={form.username}
+          onChange={onChange}
+        />
+        <input
+          name="name"
+          placeholder="이름"
+          value={form.name}
+          onChange={onChange}
+        />
+        <button type="submit">등록</button>
+      </form>
+
+      <div>
+        <ul>
+          {data.array.map((info) => (
+            <li key={info.id} onClick={() => onRemove(info.id)}>
+              {info.username} ({info.name})
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
+
 export default App;
